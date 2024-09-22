@@ -37,7 +37,6 @@ app.post('/shorten', async (req, res) => {
     // Generate short URL using your custom domain
     const shortUrl = `https://trimlink.onrender.com/${shortid.generate()}`;
 
-
     try {
         const database = client.db(dbName);
         const urlsCollection = database.collection(collectionName);
@@ -55,7 +54,6 @@ app.post('/shorten', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
-
 
 // Redirect to the original URL
 app.get('/:shortUrl', async (req, res) => {
@@ -78,6 +76,23 @@ app.get('/:shortUrl', async (req, res) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
+
+// Function to clear the URLs collection
+async function clearUrlsCollection() {
+    try {
+        const database = client.db(dbName);
+        const urlsCollection = database.collection(collectionName);
+
+        // Clear the collection
+        const result = await urlsCollection.deleteMany({});
+        console.log(`Cleared ${result.deletedCount} URLs from the collection.`);
+    } catch (error) {
+        console.error('Error clearing the collection:', error);
+    }
+}
+
+// Clear the collection every hour
+setInterval(clearUrlsCollection, 60 * 60 * 1000); // 1 hour in milliseconds
 
 // Start the server
 app.listen(PORT, () => {
