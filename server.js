@@ -35,7 +35,7 @@ app.post('/shorten', async (req, res) => {
     const { originalUrl } = req.body;
 
     // Generate short URL using your custom domain
-    const shortUrl = `http://localhost:5000/${shortid.generate()}`;
+    const shortUrl = `https://trimlink.onrender.com/${shortid.generate()}`;
 
 
     try {
@@ -66,7 +66,7 @@ app.get('/:shortUrl', async (req, res) => {
         const urlsCollection = database.collection(collectionName);
 
         // Find the original URL corresponding to the short URL
-        const urlDoc = await urlsCollection.findOne({ shortUrl: `http://localhost:5000/${shortUrl}` });
+        const urlDoc = await urlsCollection.findOne({ shortUrl: `https://trimlink.onrender.com/${shortUrl}` });
 
         if (urlDoc) {
             res.redirect(urlDoc.originalUrl);
